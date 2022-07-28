@@ -1,16 +1,11 @@
-pipeline {
-  environment {
-    registry = "mehmethypegedik/dhtests"
-    registryCredential = 'dockerhubID'
-  }
-  agent any
-  stages {
-    stage('Building image') {
-      steps{
-        script {
-          docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
+node {
+    checkout scm
+
+    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhubID') {
+
+        def customImage = docker.build('mehmethypegedik/dhtests:v01')
+
+        /* Push the container to the custom Registry */
+        customImage.push()
     }
-  }
 }
